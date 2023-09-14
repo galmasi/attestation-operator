@@ -51,6 +51,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+device plugin selector labels
+*/}}
+{{- define "agentplugin.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "agent.name" . }}-plugin
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "agent.serviceAccountName" -}}
