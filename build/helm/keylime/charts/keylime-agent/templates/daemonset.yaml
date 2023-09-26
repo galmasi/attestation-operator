@@ -64,6 +64,7 @@ spec:
               # copy them to the expected destinations
               cp -v /tmp/cv_ca/${POD_IP}-private.pem /certs/server-private.pem
               cp -v /tmp/cv_ca/${POD_IP}-cert.crt /certs/server-cert.crt
+
       containers:
         - name: {{ .Chart.Name }}
           env:
@@ -107,8 +108,6 @@ spec:
               mountPath: /var/lib/keylime-persistent
             - name: secure
               mountPath: /var/lib/keylime/secure
-            - name: securityfs
-              mountPath: /sys/kernel/security
               readOnly: true
             - name: tmpfs
               mountPath: /tmp
@@ -151,7 +150,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
-{{ if .Values.plugin_enabled }}
+{{ if not .Values.global.service.agent.privileged }}
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -179,8 +178,8 @@ spec:
       serviceAccountName: {{ include "agent.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}-devplugin
-          image: "{{ .Values.pluginimage.repository }}:{{ .Values.pluginimage.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: '{{- include "agent.pluginImage.repository" . }}:{{- include "agent.pluginImage.tag" .}}'
+          imagePullPolicy: {{ .Values.pluginImage.pullPolicy }}
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false

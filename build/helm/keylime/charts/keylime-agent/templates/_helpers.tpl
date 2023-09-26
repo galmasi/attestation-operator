@@ -134,6 +134,30 @@ Define a custom init image tag.
 {{- toYaml .Chart.AppVersion }}
 {{- end }}
 {{- end }}
+
+{{/*
+Define a custom plugin image repository.
+*/}}
+{{- define "agent.pluginImage.repository" -}}
+{{- if .Values.global.service.agent.pluginImage.repository }}
+{{- toYaml .Values.global.service.agent.pluginImage.repository }}
+{{- else }}
+{{- toYaml .Values.pluginImage.repository }}
+{{- end }}
+{{- end }}
+
+{{/*
+Define a custom plugin image tag.
+*/}}
+{{- define "agent.pluginImage.tag" -}}
+{{- if .Values.global.service.agent.pluginImage.tag }}
+{{- toYaml .Values.global.service.agent.pluginImage.tag }}
+{{- else }}
+{{- toYaml .Chart.AppVersion }}
+{{- end }}
+{{- end }}
+
+
 {{/*
 Decide on a privileged or unprivileged securityContext for a pod
 */}}
