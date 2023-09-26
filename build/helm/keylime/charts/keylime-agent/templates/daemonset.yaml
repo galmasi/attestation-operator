@@ -111,6 +111,9 @@ spec:
               readOnly: true
             - name: tmpfs
               mountPath: /tmp
+            - name: securityfs
+              mountPath: /sys/kernel/security
+              readOnly: true
           resources:
             {{- include "agent.resources" . | nindent 12 }}
       volumes:
